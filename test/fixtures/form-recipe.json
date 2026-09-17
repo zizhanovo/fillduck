@@ -1,0 +1,201 @@
+{
+  "id": "fixture-form",
+  "name": "测试页全部动作",
+  "version": 1,
+  "match": {
+    "host": [
+      "localhost",
+      "127.0.0.1"
+    ]
+  },
+  "profileType": "案件",
+  "steps": [
+    {
+      "name": "全部动作",
+      "path": "^/test/fixtures/form\\.html",
+      "final": true,
+      "actions": [
+        {
+          "do": "fill",
+          "label": "姓名",
+          "target": [
+            "#name"
+          ],
+          "value": "{{姓名}}",
+          "required": true
+        },
+        {
+          "do": "fill",
+          "label": "电话（备用选择器）",
+          "target": [
+            "#nope",
+            "#phone"
+          ],
+          "value": "{{手机}}"
+        },
+        {
+          "do": "check",
+          "label": "性别",
+          "target": [
+            "input[name=sex]"
+          ],
+          "value": "女"
+        },
+        {
+          "do": "check",
+          "label": "同意协议",
+          "target": [
+            "#agree"
+          ]
+        },
+        {
+          "do": "select",
+          "label": "紧急程度",
+          "target": [
+            "#level"
+          ],
+          "value": "加急"
+        },
+        {
+          "do": "typeAndPick",
+          "label": "类别（候选不存在）",
+          "target": [
+            "#kind"
+          ],
+          "options": "#pick li",
+          "value": "不存在的类别",
+          "timeout": 800,
+          "verify": false
+        },
+        {
+          "do": "typeAndPick",
+          "label": "类别",
+          "target": [
+            "#kind"
+          ],
+          "options": "#pick li",
+          "value": "{{商品类别}}",
+          "required": true,
+          "verifyNonEmpty": [
+            "#kindcode"
+          ]
+        },
+        {
+          "do": "fill",
+          "label": "会被清空的框",
+          "target": [
+            "#cleared"
+          ],
+          "value": "临时值"
+        },
+        {
+          "do": "cascade",
+          "label": "地区（随后被方式清空）",
+          "target": [
+            "#pickerOpen"
+          ],
+          "levels": [
+            "#picker .province a",
+            "#picker .city a",
+            "#picker .district a"
+          ],
+          "value": "{{处理单位}}",
+          "verifyTarget": [
+            "#region"
+          ],
+          "verifyNonEmpty": [
+            "#regioncode"
+          ]
+        },
+        {
+          "do": "click",
+          "label": "方式",
+          "target": [
+            "#modes a"
+          ],
+          "value": "{{销售方式}}"
+        },
+        {
+          "do": "builtin",
+          "label": "平台",
+          "name": "12315.platform",
+          "when": "{{销售方式}}==网购"
+        },
+        {
+          "do": "call",
+          "label": "调用页面函数",
+          "fn": "page.ping",
+          "args": [
+            "{{姓名}}",
+            2
+          ]
+        },
+        {
+          "do": "fill",
+          "label": "内容",
+          "target": [
+            "#content"
+          ],
+          "value": "{{举报内容}}",
+          "trigger": "words"
+        },
+        {
+          "do": "click",
+          "label": "按文字点击",
+          "text": "显示延迟元素"
+        },
+        {
+          "do": "waitFor",
+          "label": "等延迟元素",
+          "target": [
+            "#ready"
+          ],
+          "timeout": 3000
+        },
+        {
+          "do": "upload",
+          "label": "附件",
+          "target": [
+            "#file"
+          ],
+          "queue": "#queue > div"
+        },
+        {
+          "do": "click",
+          "label": "上一步（应被拦）",
+          "target": [
+            "#back"
+          ]
+        },
+        {
+          "do": "click",
+          "label": "提交（应被拦）",
+          "target": [
+            "#submit"
+          ]
+        },
+        {
+          "do": "fill",
+          "label": "条件不满足",
+          "target": [
+            "#name"
+          ],
+          "value": "x",
+          "when": "{{销售方式}}==线下"
+        },
+        {
+          "do": "fill",
+          "label": "缺资料",
+          "target": [
+            "#name"
+          ],
+          "value": "{{不存在的字段}}",
+          "required": true
+        }
+      ],
+      "submit": [
+        "#submit"
+      ]
+    }
+  ]
+}

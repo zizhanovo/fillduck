@@ -1,0 +1,125 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>填鸭测试页：全部动作</title>
+<style>
+  body { font: 14px system-ui; margin: 24px; }
+  .row { margin: 8px 0; }
+  .hidden { display: none; }
+  #picker .level a, #pick li, #platform a { display: inline-block; margin: 2px 6px; cursor: pointer; }
+</style>
+
+<div class="row"><label for="name">姓名</label> <input id="name"></div>
+<div class="row"><label for="phone">电话</label> <input id="phone2"><input id="phone"></div>
+<div class="row">性别
+  <input type="radio" name="sex" value="m">男
+  <input type="radio" name="sex" value="f">女
+</div>
+<div class="row"><label><input type="checkbox" id="agree"> 同意协议</label></div>
+<div class="row"><select id="level"><option value="">请选择</option><option value="1">普通</option><option value="2">加急</option></select></div>
+
+<div class="row">类别 <input id="kind" oninput="onKind()"><ul id="pick"></ul><input type="hidden" id="kindcode"></div>
+
+<div class="row">地区 <span id="pickerOpen">点击选择</span> <input id="region" readonly> <input type="hidden" id="regioncode">
+  <div id="picker" class="hidden">
+    <div class="level province"></div><div class="level city"></div><div class="level district"></div>
+  </div>
+</div>
+
+<div class="row">方式 <span id="modes"><a onclick="setMode('线下')">线下</a> <a onclick="setMode('网购')">网购</a></span> <input id="mode" readonly></div>
+
+<div class="row">平台 <input id="dsptname" readonly> <input type="hidden" id="dsptcode">
+  <div id="dspt_div" class="hidden">
+    <a class="dspt_tab" value="1">综合</a><a class="dspt_tab" value="9">娱乐</a><a class="dspt_tab" value="99">其他</a>
+    <div id="dspt_data"><div class="dspt_data_wrap"></div>
+      <a class="check-item" value="1">平台本身</a><a class="check-item" value="2">入驻商户</a>
+      <input id="dsptrzsh_text"> <input id="dsptname_qt">
+    </div>
+    <a id="dspt_submit_btn" disabled onclick="dsptOk()">确定</a>
+  </div>
+</div>
+
+<div class="row"><textarea id="content"></textarea> <span id="count">0</span></div>
+<div class="row"><button type="button" id="later" onclick="later()">显示延迟元素</button> <span id="slot"></span></div>
+<div class="row"><input type="file" id="file" multiple> <div id="queue"></div></div>
+<div class="row"><input id="cleared"></div>
+
+<div class="row"><button type="button" id="back">上一步</button> <input type="button" class="submit-btn" id="submit" value="提交" onclick="window.SUBMITTED = true"></div>
+
+<script>
+  window.calls = [];
+  function words() { document.getElementById('count').textContent = document.getElementById('content').value.length; window.calls.push('words'); }
+  window.page = { ping(a, b) { window.calls.push(['ping', a, b]); } };
+
+  // typeAndPick：异步出候选
+  function onKind() {
+    const v = document.getElementById('kind').value;
+    document.getElementById('cleared').value = '';
+    setTimeout(() => {
+      document.getElementById('pick').innerHTML = ['培训服务', '其他技能培训服务', '课程']
+        .filter((t) => t.includes(v.slice(0, 2)))
+        .map((t, i) => `<li onclick="pickKind('${t}', 'K${i}')">${t}</li>`).join('');
+    }, 300);
+  }
+  function pickKind(t, c) { document.getElementById('kind').value = t; document.getElementById('kindcode').value = c; document.getElementById('pick').innerHTML = ''; }
+
+  // cascade：三级选择
+  const tree = { 甲省: { 乙市: ['丙区市场监督管理局', '丁区市场监督管理局'] } };
+  let sel = [];
+  document.getElementById('pickerOpen').onclick = () => {
+    sel = [];
+    document.getElementById('picker').classList.remove('hidden');
+    document.querySelector('#picker .province').innerHTML = Object.keys(tree).map((p) => `<a title="${p}">${p}</a>`).join('');
+  };
+  document.getElementById('picker').onclick = (e) => {
+    const a = e.target.closest('a'); if (!a) return;
+    const lv = a.parentElement.classList;
+    if (lv.contains('province')) { sel = [a.title]; document.querySelector('#picker .city').innerHTML = Object.keys(tree[a.title]).map((c) => `<a title="${c}">${c}</a>`).join(''); }
+    if (lv.contains('city')) { sel[1] = a.title; document.querySelector('#picker .district').innerHTML = tree[sel[0]][a.title].map((d) => `<a title="${d}">${d}</a>`).join(''); }
+    if (lv.contains('district')) {
+      sel[2] = a.title;
+      document.getElementById('region').value = sel.join('/');
+      document.getElementById('regioncode').value = 'R001';
+      document.getElementById('picker').classList.add('hidden');
+    }
+  };
+
+  // 选方式会清空地区（模拟 12315 的联动清空）
+  function setMode(m) {
+    document.getElementById('mode').value = m;
+    document.getElementById('region').value = '';
+    document.getElementById('regioncode').value = '';
+  }
+
+  // 模拟 12315 电商平台弹窗
+  window.dspt_data_map = [];
+  function showPlatform() {
+    document.getElementById('dspt_div').classList.remove('hidden');
+    setTimeout(() => { window.dspt_data_map = [{ ptcode: '900011', ptname: '腾讯', lb: '9' }, { ptcode: '100001', ptname: '示例商城', lb: '1' }]; }, 200);
+  }
+  let tab = '1', code = '', type = '';
+  document.getElementById('dspt_div').onclick = (e) => {
+    const t = e.target;
+    if (t.classList.contains('dspt_tab')) {
+      tab = t.getAttribute('value');
+      document.querySelector('.dspt_data_wrap').innerHTML = window.dspt_data_map.filter((x) => x.lb === tab).map((x) => `<a class="dspt_data_a" value="${x.ptcode}">${x.ptname}</a>`).join('');
+    }
+    if (t.classList.contains('dspt_data_a')) code = t.getAttribute('value');
+    if (t.classList.contains('check-item')) type = t.getAttribute('value');
+  };
+  function dspt_submit_toggle() {
+    const ok = type && (type === '1' || document.getElementById('dsptrzsh_text').value.trim()) && (tab === '99' ? document.getElementById('dsptname_qt').value.trim() : code);
+    const b = document.getElementById('dspt_submit_btn');
+    ok ? b.removeAttribute('disabled') : b.setAttribute('disabled', '');
+  }
+  function dsptOk() {
+    const hit = window.dspt_data_map.find((x) => x.ptcode === code);
+    document.getElementById('dsptname').value = tab === '99' ? document.getElementById('dsptname_qt').value : hit.ptname;
+    document.getElementById('dsptcode').value = tab === '99' ? '' : code;
+    document.getElementById('dspt_div').classList.add('hidden');
+  }
+
+  function later() { setTimeout(() => { document.getElementById('slot').innerHTML = '<b id="ready">好了</b>'; }, 500); }
+  document.getElementById('file').onchange = (e) => {
+    document.getElementById('queue').innerHTML = Array.from(e.target.files).map((f) => `<div>${f.name}</div>`).join('');
+  };
+</script>

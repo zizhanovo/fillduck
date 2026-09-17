@@ -1,0 +1,27 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>填鸭测试页：通用配方</title>
+<style>body { font: 14px system-ui; margin: 24px; } td { padding: 4px 8px; }</style>
+<form onsubmit="window.SUBMITTED = true; return false">
+  <table>
+    <tr><td>真实姓名：</td><td><input name="f1" id="f1"></td></tr>
+    <tr><td><label for="tel">联系电话</label></td><td><input id="tel"></td></tr>
+    <tr><td>邮箱</td><td><input name="contact_email" id="em"></td></tr>
+    <tr><td>公司</td><td><input autocomplete="organization" id="org"></td></tr>
+    <tr><td>单位地址</td><td><input id="addr" value="已有的地址"></td></tr>
+    <tr><td>邮编</td><td><input placeholder="Postal code" id="zip"></td></tr>
+    <tr><td>省份</td><td><select id="prov"><option value="">请选择</option><option>甲省</option><option>乙省</option></select></td></tr>
+    <tr><td>登录密码</td><td><input type="password" id="pwd"></td></tr>
+    <tr><td>身份证照片</td><td><input type="file" id="photo"></td></tr>
+    <tr><td>举报内容</td><td><textarea id="content"></textarea></td></tr>
+    <tr><td>爱好</td><td><input id="hobby"></td></tr>
+    <tr><td>隐藏</td><td><input type="hidden" id="secret"><input id="invisible" style="display:none"></td></tr>
+    <tr><td>Your name (React)</td><td><input id="react" aria-label="Full name" name="rx"></td></tr>
+  </table>
+  <button type="submit" id="go">提交</button>
+</form>
+<script>
+  // 模拟受控组件：只认 input 事件里读到的值
+  window.reactState = '';
+  document.getElementById('react').addEventListener('input', (e) => { window.reactState = e.target.value; });
+</script>
