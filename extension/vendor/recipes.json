@@ -1,0 +1,211 @@
+[
+  {
+    "id": "12315-jubao",
+    "name": "12315 举报",
+    "version": 1,
+    "match": {
+      "host": "www.12315.cn"
+    },
+    "profileType": "案件",
+    "steps": [
+      {
+        "name": "举报须知",
+        "path": "^/cuser/portal/jbcase/notice",
+        "actions": [
+          {
+            "do": "waitFor",
+            "label": "等倒计时结束",
+            "target": [
+              "#agree"
+            ],
+            "notClass": "btn-defult",
+            "timeout": 15000
+          },
+          {
+            "do": "click",
+            "label": "同意",
+            "target": [
+              "#agree"
+            ],
+            "defer": true
+          }
+        ]
+      },
+      {
+        "name": "举报对象",
+        "path": "^/cuser/portal/jbcase/corperation",
+        "actions": [
+          {
+            "do": "builtin",
+            "label": "搜索并选择企业",
+            "name": "12315.pickCompany"
+          }
+        ]
+      },
+      {
+        "name": "举报人信息",
+        "path": "^/cuser/portal/jbcase/customer",
+        "validate": "12315.reporter",
+        "actions": [
+          {
+            "do": "fill",
+            "label": "地址",
+            "target": [
+              "#provideraddr"
+            ],
+            "value": "{{详细地址}}"
+          },
+          {
+            "do": "click",
+            "label": "下一步",
+            "target": [
+              "#customerSubmit"
+            ],
+            "defer": true
+          }
+        ]
+      },
+      {
+        "name": "业务信息",
+        "path": "^/cuser/portal/jbcase/information",
+        "final": true,
+        "validate": "12315.caseCard",
+        "actions": [
+          {
+            "do": "fill",
+            "label": "商品名称",
+            "target": [
+              "#spmc"
+            ],
+            "value": "{{商品名称}}",
+            "required": true
+          },
+          {
+            "do": "typeAndPick",
+            "label": "商品类别",
+            "target": [
+              "#xffwlx"
+            ],
+            "trigger": "handleXffwlxInput",
+            "options": "#xffwlxUl li",
+            "value": "{{商品类别}}",
+            "required": true,
+            "timeout": 8000,
+            "verifyNonEmpty": [
+              "#xffwlxcode"
+            ]
+          },
+          {
+            "do": "fill",
+            "label": "其他类别描述",
+            "target": [
+              "#xffwlxother"
+            ],
+            "value": "{{其他类别描述}}",
+            "when": "{{其他类别描述}}"
+          },
+          {
+            "do": "click",
+            "label": "销售方式",
+            "target": [
+              "#xsfsliDiv a"
+            ],
+            "value": "{{销售方式}}",
+            "required": true,
+            "settle": 300
+          },
+          {
+            "do": "builtin",
+            "label": "电商平台",
+            "name": "12315.platform",
+            "when": "{{销售方式}}==网购"
+          },
+          {
+            "do": "fill",
+            "label": "订单号",
+            "target": [
+              "#ddh"
+            ],
+            "value": "{{订单号}}"
+          },
+          {
+            "do": "typeAndPick",
+            "label": "举报问题类别",
+            "target": [
+              "#tswtlx"
+            ],
+            "trigger": "handtswtlxInput",
+            "options": "#wtwlxUl li, li.wtfwlxUlLi",
+            "value": "{{举报问题类别}}",
+            "required": true,
+            "timeout": 8000,
+            "verifyNonEmpty": [
+              "#tswtlxcode"
+            ]
+          },
+          {
+            "do": "fill",
+            "label": "其他问题类别",
+            "target": [
+              "#tswtlxother"
+            ],
+            "value": "{{其他问题类别}}",
+            "when": "{{其他问题类别}}"
+          },
+          {
+            "do": "check",
+            "label": "医药腐败",
+            "target": [
+              "input[name=isyyfb]"
+            ],
+            "value": "{{医药腐败}}"
+          },
+          {
+            "do": "cascade",
+            "label": "处理单位",
+            "target": [
+              "#cldwdiv .city-picker-span"
+            ],
+            "levels": [
+              ".city-select.province a",
+              ".city-select.city a",
+              ".city-select.district a"
+            ],
+            "value": "{{处理单位}}",
+            "required": true,
+            "settle": 400,
+            "timeout": 6000,
+            "verifyTarget": [
+              "#cldw"
+            ],
+            "verifyNonEmpty": [
+              "#cldwcode"
+            ]
+          },
+          {
+            "do": "fill",
+            "label": "举报内容",
+            "target": [
+              "#tsnr"
+            ],
+            "value": "{{举报内容}}",
+            "trigger": "words_deal",
+            "required": true
+          },
+          {
+            "do": "upload",
+            "label": "附件",
+            "target": [
+              "input[type=file]"
+            ],
+            "queue": "#fileQueue > *"
+          }
+        ],
+        "submit": [
+          "input.submit-btn[name=submit]",
+          "input.submit-btn"
+        ]
+      }
+    ]
+  }
+]

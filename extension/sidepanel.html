@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>填鸭 FillDuck</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="top">
+    <h1>填鸭 FillDuck</h1>
+    <p class="notice" role="note">资料以<strong>明文</strong>保存在本机浏览器里，不会上传。请不要存密码和银行卡。</p>
+  </header>
+
+  <main>
+    <!-- 资料卡列表 -->
+    <section aria-labelledby="h-cards">
+      <div class="row between">
+        <h2 id="h-cards">资料卡</h2>
+        <span id="save-status" class="muted" aria-live="polite"></span>
+      </div>
+      <ul id="card-list" class="card-list"></ul>
+      <p id="card-empty" class="muted" hidden>还没有资料卡，先点「新建」。</p>
+      <div class="toolbar">
+        <button type="button" id="btn-new">新建</button>
+        <button type="button" id="btn-copy">复制</button>
+        <button type="button" id="btn-delete" class="danger">删除</button>
+        <button type="button" id="btn-import">导入</button>
+        <button type="button" id="btn-paste" aria-expanded="false" aria-controls="paste-box">粘贴导入</button>
+        <button type="button" id="btn-export">导出</button>
+        <input type="file" id="import-file" accept=".json,application/json" hidden>
+      </div>
+      <div id="paste-box" class="field" hidden>
+        <label for="paste-text">把资料卡 JSON 粘贴到这里</label>
+        <textarea id="paste-text" rows="5" spellcheck="false"></textarea>
+        <div class="toolbar">
+          <button type="button" id="btn-paste-ok" class="primary">导入粘贴的内容</button>
+        </div>
+      </div>
+      <div id="import-msg" class="msg" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <!-- 编辑当前资料卡 -->
+    <section id="editor" aria-labelledby="h-editor" hidden>
+      <h2 id="h-editor">编辑资料卡</h2>
+      <p class="muted">边输入边自动保存。</p>
+      <div class="field">
+        <label for="p-name">名称</label>
+        <input id="p-name" type="text" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="p-type">类型</label>
+        <select id="p-type">
+          <option>个人</option>
+          <option>公司</option>
+          <option>案件</option>
+          <option>自定义</option>
+        </select>
+      </div>
+      <fieldset>
+        <legend>常用字段</legend>
+        <div id="std-fields"></div>
+      </fieldset>
+      <fieldset>
+        <legend>自定义字段</legend>
+        <p class="muted">比如「举报内容」「商品名称」。</p>
+        <div id="custom-fields"></div>
+        <button type="button" id="btn-add-custom">添加自定义字段</button>
+      </fieldset>
+      <div id="profile-errors" class="msg error" role="alert" hidden></div>
+    </section>
+
+    <!-- 填写 -->
+    <section aria-labelledby="h-fill">
+      <h2 id="h-fill">填写当前网页</h2>
+      <div class="field">
+        <label for="files">附件（可选，只用于本次填写，不会保存）</label>
+        <input id="files" type="file" multiple>
+      </div>
+      <div class="field check">
+        <input id="force-generic" type="checkbox">
+        <label for="force-generic">强制用通用配方（不用站点专用配方）</label>
+      </div>
+      <button type="button" id="btn-fill" class="primary">一口填完</button>
+    </section>
+
+    <!-- 结果 -->
+    <section id="result" aria-labelledby="h-result" aria-live="polite" aria-atomic="false">
+      <h2 id="h-result" class="visually-hidden">填写结果</h2>
+      <div id="result-body"></div>
+    </section>
+  </main>
+
+  <script src="vendor/fillduck.js"></script>
+  <script src="sidepanel.js"></script>
+</body>
+</html>

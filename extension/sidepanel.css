@@ -1,0 +1,149 @@
+:root {
+  --bg: #fff;
+  --fg: #1f2328;
+  --muted: #59636e;
+  --line: #d0d7de;
+  --soft: #f6f8fa;
+  --accent: #0b6bcb;
+  --accent-fg: #fff;
+  --ok: #1a7f37;
+  --fail: #cf222e;
+  --skip: #9a6700;
+  --warn-bg: #fff8c5;
+  --err-bg: #ffebe9;
+  --focus: #0b6bcb;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1c2128;
+    --fg: #e6edf3;
+    --muted: #9198a1;
+    --line: #3d444d;
+    --soft: #262c36;
+    --accent: #4493f8;
+    --accent-fg: #0d1117;
+    --ok: #3fb950;
+    --fail: #f85149;
+    --skip: #d29922;
+    --warn-bg: #3b2e0a;
+    --err-bg: #3c1618;
+    --focus: #4493f8;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-width: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.5 system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+main, .top { padding: 0 12px; }
+h1 { font-size: 17px; margin: 12px 0 6px; }
+h2 { font-size: 15px; margin: 16px 0 8px; }
+section + section { border-top: 1px solid var(--line); }
+.muted { color: var(--muted); font-size: 12px; margin: 4px 0; }
+.row { display: flex; align-items: center; gap: 8px; }
+.between { justify-content: space-between; }
+
+.notice {
+  margin: 0 0 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--warn-bg);
+  font-size: 13px;
+}
+
+button, input, select, textarea { font: inherit; color: inherit; }
+button {
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--soft);
+  cursor: pointer;
+}
+button:hover { border-color: var(--muted); }
+button:disabled { opacity: .55; cursor: not-allowed; }
+button.danger { color: var(--fail); }
+button.primary {
+  width: 100%;
+  min-height: 44px;
+  margin: 8px 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+
+.card-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.card-list button {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg);
+}
+.card-list button[aria-current="true"] { border: 2px solid var(--accent); background: var(--soft); font-weight: 600; }
+.card-list .type { color: var(--muted); font-weight: normal; font-size: 12px; white-space: nowrap; }
+.card-list .name { overflow-wrap: anywhere; }
+
+fieldset { border: 1px solid var(--line); border-radius: 6px; margin: 10px 0; padding: 6px 10px 10px; min-width: 0; }
+legend { padding: 0 4px; font-weight: 600; }
+.field { display: grid; gap: 2px; margin: 8px 0; }
+.field label { font-size: 13px; color: var(--muted); }
+.field.check { display: flex; align-items: center; gap: 6px; }
+.field.check label { color: var(--fg); }
+input[type="text"], input:not([type]), select, textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+}
+input[type="file"] { max-width: 100%; }
+textarea { resize: vertical; }
+
+.custom-row { border: 1px dashed var(--line); border-radius: 6px; padding: 6px 8px; margin: 8px 0; }
+.custom-row .row { justify-content: flex-end; }
+
+.msg { margin: 8px 0; padding: 8px 10px; border-radius: 6px; background: var(--soft); overflow-wrap: anywhere; }
+.msg.error { background: var(--err-bg); color: var(--fg); border-left: 4px solid var(--fail); }
+.msg.ok { border-left: 4px solid var(--ok); }
+.msg ul { margin: 4px 0 0; padding-left: 18px; }
+
+.hint { margin: 8px 0; padding: 10px; border-radius: 6px; background: var(--warn-bg); font-weight: 600; }
+.summary { display: flex; flex-wrap: wrap; gap: 6px 12px; margin: 6px 0; }
+.summary .ok { color: var(--ok); }
+.summary .fail { color: var(--fail); }
+.summary .skip { color: var(--skip); }
+
+.results { list-style: none; margin: 8px 0 16px; padding: 0; display: grid; gap: 6px; }
+.results li { border: 1px solid var(--line); border-left-width: 4px; border-radius: 6px; padding: 6px 8px; overflow-wrap: anywhere; }
+.results li.fail { border-left-color: var(--fail); }
+.results li.skip { border-left-color: var(--skip); }
+.results li.ok { border-left-color: var(--ok); }
+.results .head { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; }
+.results .badge { white-space: nowrap; font-size: 12px; }
+.results li.fail .badge { color: var(--fail); }
+.results li.skip .badge { color: var(--skip); }
+.results li.ok .badge { color: var(--ok); }
+.results dl { margin: 4px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; font-size: 13px; }
+.results dt { color: var(--muted); }
+.results dd { margin: 0; min-width: 0; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* 让 hidden 属性总能生效（.field 等设置了 display 的元素也一样） */
+[hidden] { display: none !important; }
