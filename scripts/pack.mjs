@@ -79,21 +79,26 @@ cpSync(join(root, 'extension'), join(stage, 'fillduck-extension'), { recursive: 
 cpSync(join(root, 'skill/fillduck'), join(stage, 'fillduck'), { recursive: true });
 for (const f of run('find', [stage, '-name', '.DS_Store']).split('\n').filter(Boolean)) rmSync(f);
 
+// 插件包：manifest.json 必须在压缩包根目录，商店才认（外面套一层目录会被判「找不到 manifest.json」）
+// skill 包：保留 fillduck/ 外层目录，解压后直接就是一个 skill 目录
 const zips = [
-  ['fillduck-extension.zip', 'fillduck-extension'],
-  ['fillduck-skill.zip', 'fillduck'],
+  ['fillduck-extension.zip', 'fillduck-extension', true],
+  ['fillduck-skill.zip', 'fillduck', false],
 ];
-for (const [zip, dir] of zips) {
+for (const [zip, dir, atRoot] of zips) {
   rmSync(join(dist, zip), { force: true });
-  run('zip', ['-qrX', join('..', zip), dir], { cwd: stage });
+  if (atRoot) run('zip', ['-qrX', join('..', '..', zip), '.'], { cwd: join(stage, dir) });
+  else run('zip', ['-qrX', join('..', zip), dir], { cwd: stage });
 }
 
 // 解压回来逐字节比对，确认包里就是源目录
 const check = join(dist, 'check');
 rmSync(check, { recursive: true, force: true });
 mkdirSync(check);
-for (const [zip] of zips) run('unzip', ['-q', join(dist, zip), '-d', check]);
-run('diff', ['-r', join(root, 'extension'), join(check, 'fillduck-extension')]);
+run('unzip', ['-q', join(dist, 'fillduck-extension.zip'), '-d', join(check, 'ext')]);
+run('unzip', ['-q', join(dist, 'fillduck-skill.zip'), '-d', check]);
+if (!existsSync(join(check, 'ext/manifest.json'))) die('插件包里 manifest.json 不在根目录，商店会拒收');
+run('diff', ['-r', join(root, 'extension'), join(check, 'ext')]);
 run('diff', ['-r', join(root, 'skill/fillduck'), join(check, 'fillduck')]);
 rmSync(check, { recursive: true, force: true });
 rmSync(stage, { recursive: true, force: true });

@@ -6,7 +6,7 @@
 // 另有两条 AMO 的硬要求写在下面的常量里，改动前先读注释。
 // 用法：node scripts/build-firefox.mjs
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -95,14 +95,16 @@ console.log('④ 打包');
 const dist = join(root, 'dist');
 const zip = 'fillduck-firefox.zip';
 rmSync(join(dist, zip), { force: true });
-run('zip', ['-qrX', zip, 'firefox'], { cwd: dist });
+// manifest.json 必须在压缩包根目录，AMO 才认
+run('zip', ['-qrX', join('..', zip), '.'], { cwd: out });
 
 // 解压回来确认包里就是刚生成的目录
 const check = join(dist, 'check-firefox');
 rmSync(check, { recursive: true, force: true });
 mkdirSync(check);
 run('unzip', ['-q', join(dist, zip), '-d', check]);
-run('diff', ['-r', out, join(check, 'firefox')]);
+if (!existsSync(join(check, 'manifest.json'))) die('Firefox 包里 manifest.json 不在根目录，AMO 会拒收');
+run('diff', ['-r', out, check]);
 rmSync(check, { recursive: true, force: true });
 
 console.log(`→ dist/${zip}  ${(statSync(join(dist, zip)).size / 1024).toFixed(1)} KB`);
