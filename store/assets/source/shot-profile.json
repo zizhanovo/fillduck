@@ -1,0 +1,51 @@
+{
+  "person": {
+    "name": "张鸭鸭（个人）",
+    "type": "个人",
+    "fields": {
+      "name": "张鸭鸭",
+      "mobile": "13800000000",
+      "email": "duck@example.com",
+      "address": "示例省示例市示例区鸭鸭大道 1 号 2 幢 303 室",
+      "province": "甲省",
+      "city": "示例市",
+      "district": "示例区",
+      "postcode": "100000",
+      "company": "示例鸭鸭文化传媒有限公司",
+      "creditCode": "91110000MA0EXAMPLE",
+      "title": "产品经理",
+      "website": "https://example.com"
+    },
+    "custom": [
+      {
+        "key": "c_jbnr",
+        "label": "举报内容",
+        "value": "2026 年 3 月在该店购买的鸭绒枕，包装标称含绒量 90%，实测约 30%，涉嫌虚假标注。已与商家沟通无果，请依法核查处理。"
+      },
+      { "key": "c_hobby", "label": "爱好", "value": "观鸟、做饭" }
+    ]
+  },
+  "case": {
+    "name": "12315 举报：鸭绒枕含绒量虚标",
+    "type": "案件",
+    "fields": {
+      "name": "张鸭鸭",
+      "mobile": "13800000000",
+      "email": "duck@example.com",
+      "address": "示例省示例市示例区鸭鸭大道 1 号 2 幢 303 室"
+    },
+    "custom": [
+      { "key": "c_spmc", "label": "商品名称", "value": "鸭绒枕（示例款 DK-01）" },
+      { "key": "c_splb", "label": "商品类别", "value": "家居用品" },
+      { "key": "c_xsfs", "label": "销售方式", "value": "网购" },
+      { "key": "c_ddh", "label": "订单号", "value": "EXAMPLE-2026-0001" },
+      { "key": "c_wtlx", "label": "举报问题类别", "value": "虚假宣传" },
+      { "key": "c_cldw", "label": "处理单位", "value": "示例省/示例市/示例区" },
+      {
+        "key": "c_jbnr",
+        "label": "举报内容",
+        "value": "2026 年 3 月在该店购买的鸭绒枕，包装标称含绒量 90%，实测约 30%，涉嫌虚假标注。已与商家沟通无果，请依法核查处理。"
+      }
+    ]
+  }
+}
