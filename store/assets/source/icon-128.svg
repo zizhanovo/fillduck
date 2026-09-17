@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" shape-rendering="geometricPrecision">
+  <!-- 填鸭 FillDuck 图标 128 版：实底方块 + 浅色鸭头侧影 + 黄色鸭嘴 -->
+  <rect width="128" height="128" fill="#16615a"/>
+  <g fill="#f3f6f3">
+    <!-- 脖子（画在头下面，同色自然合并） -->
+    <path d="M20 56 C18 78 20 98 24 112 L62 112 C60 94 61 72 62 54 Z"/>
+    <!-- 头 -->
+    <circle cx="45" cy="45" r="28"/>
+  </g>
+  <!-- 鸭嘴：上下近乎平行、末端圆钝的扁嘴 -->
+  <path d="M62 37 L103 43 Q112 44.5 112 53.5 Q112 62.5 103 64 L65 67 Z" fill="#c98a0c"/>
+  <!-- 眼睛（挖回底色） -->
+  <circle cx="55" cy="37" r="5" fill="#16615a"/>
+</svg>
