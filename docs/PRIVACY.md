@@ -35,7 +35,7 @@
 - **在你访问的网站上读取和更改数据（`activeTab`、可选的所有网站权限）**：只有你点「一口填完」时，才会向当前标签页注入填写脚本。不点就不注入。插件不会在后台读取网页内容。12315（`www.12315.cn`）是内置站点，已随插件申请；其他网站在你第一次使用时由你授权。
 - **`scripting`**：用于在你点击时注入填写脚本。
 - **`storage`、`unlimitedStorage`**：用于在本机保存资料卡。
-- **`sidePanel`**：用于显示插件的侧边栏界面。
+- **`sidePanel`**（Chrome / Edge）：用于显示插件的侧边栏界面。Firefox 上侧边栏由 `sidebar_action` 声明，不需要单独的权限。
 
 ## 儿童
 
@@ -63,6 +63,6 @@ FillDuck is a browser extension that fills web forms with information you saved 
 
 **Where data goes:** nowhere. FillDuck has no server, makes no network requests, and contains no analytics, ads, tracking, or remote code. The only data movement is from your selected profile card into the form on the tab you are viewing, at the moment you click "一口填完" (Fill it all).
 
-**Permissions:** `activeTab` and the optional all-sites permission are used solely to inject the filling script into the current tab when you click the button; `scripting` to inject it; `storage` and `unlimitedStorage` to keep your cards locally; `sidePanel` to show the interface.
+**Permissions:** `activeTab` and the optional all-sites permission are used solely to inject the filling script into the current tab when you click the button; `scripting` to inject it; `storage` and `unlimitedStorage` to keep your cards locally; `sidePanel` (Chrome/Edge) to show the side panel, while on Firefox the sidebar is declared with `sidebar_action` and needs no separate permission.
 
 **Contact:** open an issue at https://github.com/zizhanovo/fillduck

@@ -18,6 +18,7 @@ skill/fillduck/           agent skill（scripts/ 为同步生成的副本）
 demo/index.html           公开示范页（内联引擎与配方，由同步写入）
 scripts/selfcheck.mjs     Node 自检（配方与资料卡校验用例）
 scripts/sync.mjs          把引擎和配方同步到插件、skill、示范页
+scripts/build-firefox.mjs 从同一份源码生成 Firefox 包（侧边栏换成 sidebar_action）
 test/fixtures/            本地测试页与测试配方
 store/                    商店文案、权限理由与素材（见 store/README.md）
 docs/PRIVACY.md           隐私政策（商店要求的公开页面）
@@ -31,6 +32,15 @@ docs/PRIVACY.md           隐私政策（商店要求的公开页面）
 4. 点工具栏的填鸭图标打开侧边栏，新建或导入资料卡。
 
 资料卡以明文保存在本机浏览器（`chrome.storage.local`），不要存密码和银行卡。附件只在侧边栏内存里，关掉就没了。首次在 12315 以外的网站使用时，Chrome 会请求该网站的访问授权；插件只在你点按钮时注入脚本，不发任何网络请求。
+
+### Firefox
+
+Chrome 那份包在 Firefox 上装不了：侧边栏和后台用的不是同一个 API。要用单独生成的 Firefox 包。
+
+1. `node scripts/build-firefox.mjs`
+2. Firefox 打开 `about:debugging#/runtime/this-firefox`，点「临时载入附加组件」，选 `dist/firefox/manifest.json`。
+
+临时载入重启浏览器就没了，只适合自己试。正式安装要等 AMO 签名，步骤见 `store/README.md`。
 
 ## 安装 skill
 
@@ -86,7 +96,7 @@ node scripts/sync.mjs --check
 node scripts/pack.mjs
 ```
 
-改了 `engine/` 或 `recipes/` 后先运行 `sync`，提交前运行 `selfcheck` 和 `sync --check`。`pack` 会把这几道检查连同隐私扫描、图标尺寸一起跑一遍，全过才出包。本地测试页：在仓库根目录起静态服务，打开 `test/fixtures/form.html`（全部动作）和 `test/fixtures/generic.html`（通用配方）。
+改了 `engine/` 或 `recipes/` 后先运行 `sync`，提交前运行 `selfcheck` 和 `sync --check`。`pack` 会把这几道检查连同隐私扫描、图标尺寸一起跑一遍，全过才出包，并顺带跑一次 `build-firefox` 生成 Firefox 包（也可以单独跑 `node scripts/build-firefox.mjs`，只出 Firefox 那一份）。本地测试页：在仓库根目录起静态服务，打开 `test/fixtures/form.html`（全部动作）和 `test/fixtures/generic.html`（通用配方）。
 
 ## 许可与借鉴
 
