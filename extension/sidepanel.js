@@ -19,7 +19,6 @@ const STD_FIELDS = [
   { key: 'website', label: '网址' },
 ];
 const PROFILE_TYPES = ['个人', '公司', '案件', '自定义'];
-const BUILTIN_HOSTS = ['https://www.12315.cn'];
 // 浏览器禁止插件改动的网页（应用商店等），直接判定填不了
 const BLOCKED_HOSTS = ['chromewebstore.google.com', 'microsoftedge.microsoft.com'];
 const SAVE_DELAY = 400;
@@ -415,7 +414,9 @@ async function refreshTab() {
     if (!tab) return (tabCache = null);
     const allUrls = await chrome.permissions.contains({ origins: ['<all_urls>'] });
     const o = originOf(tab.url);
-    const hasPerm = o ? BUILTIN_HOSTS.includes(o) || (await chrome.permissions.contains({ origins: [`${o}/*`] })) : false;
+    // 一律问浏览器：Chrome 会把 manifest 里声明的 host_permissions 算作已授予，
+    // 而 Firefox MV3 把它们当可选权限，安装时并不给，所以不能按清单自己推断。
+    const hasPerm = o ? await chrome.permissions.contains({ origins: [`${o}/*`] }) : false;
     tabCache = { id: tab.id, url: tab.url, hasPerm, allUrls };
   } catch (e) {
     tabCache = null;
